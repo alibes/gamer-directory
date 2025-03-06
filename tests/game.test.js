@@ -44,7 +44,7 @@ describe("Game API Tests", () => {
 
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty("id");
-    expect(res.body.name).toBe("Call of Duty");
+    expect(res.body.name).toBe("call of duty");
   });
 
   it("Should get all games", async () => {

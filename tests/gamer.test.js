@@ -28,7 +28,7 @@ describe("Gamer API Tests", () => {
 
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty("id");
-    expect(res.body.username).toBe("testUser");
+    expect(res.body.username).toBe("testuser");
   });
 
   it("Should get all gamers", async () => {

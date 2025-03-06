@@ -9,6 +9,10 @@ class gamerController{
       geography: z.string().min(2).max(255)
     });
 
+    if (req.body.username) {
+      req.body.username = req.body.username.toLowerCase();
+    }
+
     const validation = schema.safeParse(req.body);
     if (!validation.success) return res.status(400).json({ error: validation.error.errors[0].message });
   
@@ -16,7 +20,7 @@ class gamerController{
       const gamer = await gamerDal.insertGamer(req.body.username, req.body.geography);
       res.status(201).json(gamer);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: `Error adding gamer: ${error.message}` });
     }
   };
   
@@ -25,7 +29,7 @@ class gamerController{
       const gamers = await gamerDal.fetchAllGamers();
       res.status(200).json(gamers);
     } catch (error) {
-      res.status(500).json({ error: error.message });
+      res.status(500).json({ error: `Error fetching gamers: ${error.message}` });
     }
   };
 }
