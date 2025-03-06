@@ -10,7 +10,7 @@ class gamerController{
     });
 
     const validation = schema.safeParse(req.body);
-    if (!validation.success) return res.status(400).json({ error: validation.error.errors });
+    if (!validation.success) return res.status(400).json({ error: validation.error.errors[0].message });
   
     try {
       const gamer = await gamerDal.insertGamer(req.body.username, req.body.geography);

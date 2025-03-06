@@ -1,34 +1,29 @@
-import db from "../config/db.js";
+import pool from "../config/db.js";
 
 class GamerDal {
-  insertGamer = (username, geography) => {
-    return new Promise((resolve, reject) => {
-      db.query(
+  async insertGamer(username, geography) {
+    try {
+      const [result] = await pool.query(
         "INSERT INTO gamer (username, geography) VALUES (?, ?)",
-        [username, geography],
-        (err, result) => {
-          if (err) {
-            console.error("MySQL Error in insertGamer:", err);
-            return reject(err);
-          }
-          console.log("Insert Gamer Success:", result); 
-          resolve({ id: result.insertId, username, geography });
-        }
+        [username, geography]
       );
-    });
-  };
+      console.log("Insert Gamer Success:", result);
+      return { id: result.insertId, username, geography };
+    } catch (err) {
+      console.error("DB Error in insertGamer:", err);
+      throw new Error(err.message);
+    }
+  }
 
-  fetchAllGamers = () => {
-    return new Promise((resolve, reject) => {
-      db.query("SELECT * FROM gamer", (err, results) => {
-        if (err) {
-          console.error("MySQL Fetch Error in fetchAllGamers:", err); 
-          return reject(err);
-        }
-        resolve(results);
-      });
-    });
-  };
+  async fetchAllGamers() {
+    try {
+      const [rows] = await pool.query("SELECT * FROM gamer");
+      return rows;
+    } catch (err) {
+      console.error("DB Fetch Error in fetchAllGamers:", err);
+      throw new Error(err.message);
+    }
+  }
 }
 
 export default new GamerDal();

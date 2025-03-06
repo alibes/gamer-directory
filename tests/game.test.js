@@ -1,26 +1,30 @@
-import request from "supertest";
+import request from "supertest"; //for testing without front
 import app from "../server.js";
-import db from "../config/db.js";
+import pool from "../config/db.js"; 
 
 describe("Game API Tests", () => {
 
   beforeAll(async () => {
-    await new Promise((resolve, reject) => {
-      db.query("DELETE FROM game", (err) => {
-        if (err) reject(err);
-        resolve();
-      });
-    });
+    try {
+      await pool.execute("DELETE FROM game");
+    } catch (err) {
+      console.error("Error clearing test database:", err);
+    }
   });
 
   afterAll(async () => {
-    db.end();
+    try {
+      await pool.end(); 
+      console.log("DB Connection Pool Closed.");
+    } catch (err) {
+      console.error("Error closing database connection:", err);
+    }
   });
 
   it("Should prevent SQL Injection in addGame", async () => {
     const res = await request(app)
       .post("/games/addGame")
-      .send({ name: "'; DROP TABLE game; --" }); 
+      .send({ name: "'; DROP TABLE game; --" });
 
     expect(res.statusCode).toBe(400); 
     expect(res.body.error).toBeDefined();
@@ -29,7 +33,7 @@ describe("Game API Tests", () => {
   it("Should prevent SQL Injection in getAllGames", async () => {
     const res = await request(app).get("/games/getAllGames?name=' OR '1'='1' --");
 
-    expect(res.statusCode).toBe(200); 
+    expect(res.statusCode).toBe(200); //ignore invalid query and no crash
     expect(Array.isArray(res.body)).toBe(true);
   });
 

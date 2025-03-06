@@ -10,7 +10,7 @@ class PlayController {
     });
 
     const validation = schema.safeParse(req.body);
-    if (!validation.success) return res.status(400).json({ error: validation.error.errors });
+    if (!validation.success) return res.status(400).json({ error: validation.error.errors[0].message });
     try {
       const result = await playDal.insertPlay(req.body.gamerId, req.body.gameName, req.body.level);
       res.status(201).json(result);

@@ -14,22 +14,22 @@ const options = {
     },
     servers: [
       {
-        url: `http://localhost:${process.env.PORT || 3000}`,
+        url: process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`,
       },
     ],
   },
   apis: [
-    "./gamer/gamer.routes.js",
+    "./gamer/gamer.routes.js", /**js Doc Comments */
     "./game/game.routes.js",
     "./play/play.routes.js"
   ],
 };
 
-const swaggerSpec = swaggerJSDoc(options);
+const swaggerSpec = swaggerJSDoc(options); // to json
 
-const swaggerDocs = (app) => {
+const swaggerDocs = (app) => {  // it use to serve swagger UI mount swagger UI at api-docs
   app.use("/api-docs", swaggerUI.serve, swaggerUI.setup(swaggerSpec));
-  console.log(`📜 Swagger docs available at http://localhost:${process.env.PORT || 3000}/api-docs`);
+  console.log(`Swagger docs available at ${process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`}/api-docs`);
 };
 
 export default swaggerDocs;

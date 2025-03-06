@@ -1,20 +1,24 @@
 import request from "supertest";
 import app from "../server.js";
-import db from "../config/db.js";
+import pool from "../config/db.js"; 
 
 describe("Gamer API Tests", () => {
 
   beforeAll(async () => {
-    await new Promise((resolve, reject) => {
-      db.query("DELETE FROM gamer", (err) => {
-        if (err) reject(err);
-        resolve();
-      });
-    });
+    try {
+      await pool.execute("DELETE FROM gamer"); 
+    } catch (err) {
+      console.error("Error clearing test database:", err);
+    }
   });
 
   afterAll(async () => {
-    db.end();
+    try {
+      await pool.end(); 
+      console.log("DB Connection Pool Closed.");
+    } catch (err) {
+      console.error("Error closing database connection:", err);
+    }
   });
 
   it("Should add a new gamer", async () => {

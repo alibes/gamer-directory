@@ -8,7 +8,7 @@ class GameController {
     });
 
     const validation = schema.safeParse(req.body);
-    if (!validation.success) return res.status(400).json({ error: validation.error.errors });
+    if (!validation.success) return res.status(400).json({ error: validation.error.errors[0].message });
     try {
       const game = await gameDal.insertGame(req.body.name);
       res.status(201).json(game);

@@ -1,6 +1,6 @@
 export default {
-  testEnvironment: "node",
-  transform: {},
+  testEnvironment: "node", //not browser
+  transform: {},//ecma6
   moduleNameMapper: {
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },

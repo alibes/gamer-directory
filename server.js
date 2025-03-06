@@ -8,19 +8,23 @@ import swaggerDocs from "./config/swagger.js";
 
 dotenv.config();
 
-const app = express();
-app.use(express.json());
-app.use(cors());
+//Initialize Express App
+const app = express(); 
+app.use(express.json()); //Parses incoming JSON requests.
+app.use(cors()); //Allows requests from different origins (e.g., frontend apps).
 
+//Setup API Routes
 app.use("/gamers", gamerRoutes);
 app.use("/games", gameRoutes);
 app.use("/play", playRoutes);
 
+//Enable Swagger API Documentation
 swaggerDocs(app);
 
+//Start Server (Only in Non-Test Mode)
 if (process.env.NODE_ENV !== "test") {
-  const server = app.listen(process.env.PORT || 4000, () => {
-    console.log(`🚀 Server running on port ${process.env.PORT || 4000}`);
+  app.listen(process.env.PORT || 3000, () => {
+    console.log(`Server running on port ${process.env.PORT || 3000}`);
   });
 }
 
